@@ -1,0 +1,209 @@
+{
+ "uid": "llm-gate",
+ "title": "LLM Reliability Gate",
+ "schemaVersion": 39,
+ "version": 3,
+ "refresh": "5s",
+ "time": {
+  "from": "now-5m",
+  "to": "now"
+ },
+ "tags": [
+  "sre",
+  "llm"
+ ],
+ "panels": [
+  {
+   "id": 1,
+   "title": "Accuracy per prompt version (cumulative) vs SLO",
+   "type": "timeseries",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "gridPos": {
+    "x": 0,
+    "y": 0,
+    "w": 16,
+    "h": 9
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "(sum by (prompt)(llm_requests_total{correct=\"true\"}) / sum by (prompt)(llm_requests_total)) or (sum by (prompt)(llm_requests_total) * 0)",
+     "legendFormat": "{{prompt}}",
+     "interval": "2s"
+    },
+    {
+     "refId": "B",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "max(llm_slo_accuracy)",
+     "legendFormat": "SLO",
+     "interval": "2s"
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {
+     "unit": "percentunit",
+     "custom": {
+      "spanNulls": 10000,
+      "showPoints": "always",
+      "lineWidth": 2
+     }
+    },
+    "overrides": []
+   }
+  },
+  {
+   "id": 2,
+   "title": "Rollbacks",
+   "type": "stat",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "gridPos": {
+    "x": 16,
+    "y": 0,
+    "w": 8,
+    "h": 4
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum(max_over_time(llm_rollbacks_total[$__range])) or vector(0)",
+     "legendFormat": "rollbacks",
+     "interval": "2s"
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   }
+  },
+  {
+   "id": 3,
+   "title": "Candidate traffic %",
+   "type": "timeseries",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "gridPos": {
+    "x": 16,
+    "y": 4,
+    "w": 8,
+    "h": 5
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "max(llm_candidate_traffic_percent)",
+     "legendFormat": "candidate %",
+     "interval": "2s"
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {
+     "unit": "percent",
+     "custom": {
+      "spanNulls": 10000,
+      "showPoints": "always",
+      "lineWidth": 2
+     }
+    },
+    "overrides": []
+   }
+  },
+  {
+   "id": 4,
+   "title": "Average latency per prompt",
+   "type": "timeseries",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "gridPos": {
+    "x": 0,
+    "y": 9,
+    "w": 12,
+    "h": 8
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum by (prompt)(llm_latency_seconds_sum) / sum by (prompt)(llm_latency_seconds_count)",
+     "legendFormat": "{{prompt}}",
+     "interval": "2s"
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {
+     "unit": "s",
+     "custom": {
+      "spanNulls": 10000,
+      "showPoints": "always",
+      "lineWidth": 2
+     }
+    },
+    "overrides": []
+   }
+  },
+  {
+   "id": 5,
+   "title": "Requests served (cumulative)",
+   "type": "timeseries",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "gridPos": {
+    "x": 12,
+    "y": 9,
+    "w": 12,
+    "h": 8
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum by (prompt, correct)(llm_requests_total)",
+     "legendFormat": "{{prompt}} correct={{correct}}",
+     "interval": "2s"
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "spanNulls": 10000,
+      "showPoints": "always",
+      "lineWidth": 2
+     }
+    },
+    "overrides": []
+   }
+  }
+ ]
+}

@@ -1,0 +1,9 @@
+services:
+  lgtm:
+    image: grafana/otel-lgtm:latest   # Grafana + Tempo + Loki + Prometheus + OTel Collector
+    ports:
+      - "127.0.0.1:3000:3000"   # Grafana (admin / admin)
+      - "127.0.0.1:4317:4317"   # OTLP gRPC
+      - "127.0.0.1:4318:4318"   # OTLP HTTP (used by reliability.py)
+    volumes:
+      - ./dashboards/llm-gate.json:/otel-lgtm/grafana/conf/provisioning/dashboards/custom/llm-gate.json:ro

@@ -1,0 +1,3 @@
+-r requirements.txt
+opentelemetry-sdk
+opentelemetry-exporter-otlp-proto-http

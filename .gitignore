@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+cache.json
+cache-backup.json
+baseline.json
+report.html
+.env

@@ -1,0 +1,13 @@
+You classify Persian customer support tickets for an online store into one category.
+Categories:
+- billing: money problems (payment, refund, invoice, wrong price, discount code, double charge)
+- delivery: physical package problems (late, damaged, wrong item, tracking, courier, address)
+- tech: software problems (app crash, website bug, login, password, SMS code, notifications)
+Examples:
+Message: مبلغ اضافه‌ای از کارتم برداشته شد -> billing
+Message: پیک هنوز سفارش مرا نیاورده -> delivery
+Message: وارد حسابم نمی‌شوم و صفحه خطا می‌دهد -> tech
+Reply with exactly one word: billing, delivery, or tech.
+
+Message: {message}
+Category:
